@@ -11,6 +11,8 @@ import SnapKit
 
 final class LottoView: UIView {
     
+    private let ballSize2 = ((UIScreen.main.bounds.width) - 4*7 - 12*2) / 8
+    
     lazy var textField: UITextField = {
         let view = UITextField()
         view.textAlignment = .center
@@ -49,8 +51,69 @@ final class LottoView: UIView {
     
     let pickerView = UIPickerView()
     
-    private let stackView = UIStackView()
-    private let bnusLabel = UILabel()
+    private let stackView: UIStackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.spacing = 4
+        view.alignment = .center
+        view.distribution = .fill
+        return view
+    }()
+    private let bnusLabel: UILabel = {
+        let label = UILabel()
+        label.text = "보너스"
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 12)
+        return label
+    }()
+    private let test: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 10
+        return view
+    }()
+    
+    private let firstNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 1
+        return view
+    }()
+    private let secondNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 10
+        return view
+    }()
+    private let thirdNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 20
+        return view
+    }()
+    private let fourthNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 30
+        return view
+    }()
+    private let fifthNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 40
+        return view
+    }()
+    private let sixthNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 20
+        return view
+    }()
+    private let bnusNo: LottoCircle = {
+        let view = LottoCircle()
+        view.lottoNo = 20
+        return view
+    }()
+    private let plusLabel: LottoCircle = {
+        let view = LottoCircle()
+        view.circle.backgroundColor = .clear
+        view.numLabel.text = "+"
+        view.numLabel.textColor = .black
+        return view
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,9 +128,13 @@ final class LottoView: UIView {
 
 extension LottoView {
     private func configLayout() {
-        [textField, notiLabel, dateLabel, dividerView, roundOfLottoLabel].forEach { addSubview($0) }
-//        [firstNo, secondNo, thirdNo, fourthNo, fifthNo, sixthNo, plusLabel, bnusNo].forEach { stackView.addArrangedSubview($0) }
+        [textField, notiLabel, dateLabel, dividerView, roundOfLottoLabel, stackView, bnusLabel].forEach { addSubview($0) }
         
+        [firstNo, secondNo, thirdNo, fourthNo, fifthNo, sixthNo, plusLabel, bnusNo].forEach { stackView.addArrangedSubview($0)
+            $0.snp.makeConstraints {
+                $0.size.equalTo(ballSize2)
+            }
+        }
         
         textField.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide).inset(12)
@@ -95,49 +162,29 @@ extension LottoView {
             $0.top.equalTo(dividerView.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
         }
-//        
-//        stackView.snp.makeConstraints {
-//            $0.top.equalTo(resultLabel.snp.bottom).offset(20)
-//            $0.leading.equalToSuperview().inset(12)
-//            $0.height.equalTo(ballSize)
-//        }
-//        
-//        bnusLabel.snp.makeConstraints {
-//            $0.top.equalTo(stackView.snp.bottom)
-//            $0.centerX.equalTo(bnusNo.snp.centerX)
-//        }
-//        
-//        
-//        firstNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        secondNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        thirdNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        fourthNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        fifthNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        sixthNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        plusLabel.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        bnusNo.snp.makeConstraints {
-//            $0.size.equalTo(ballSize)
-//        }
-//        
+    
+        stackView.snp.makeConstraints {
+            $0.top.equalTo(roundOfLottoLabel.snp.bottom).offset(20)
+            $0.leading.equalToSuperview().inset(12)
+            $0.height.equalTo(ballSize2)
+        }
+        
+        bnusLabel.snp.makeConstraints {
+            $0.top.equalTo(stackView.snp.bottom)
+            $0.centerX.equalTo(bnusNo.snp.centerX)
+        }
     }
     
     func configView(lotto: Lotto) {
         textField.text = "\(lotto.drwNo)"
         dateLabel.text = lotto.drwNoDate
         roundOfLottoLabel.text = "\(lotto.drwNo)회 당첨결과"
+        firstNo.lottoNo = lotto.drwtNo1
+        secondNo.lottoNo = lotto.drwtNo2
+        thirdNo.lottoNo = lotto.drwtNo3
+        fourthNo.lottoNo = lotto.drwtNo4
+        fifthNo.lottoNo = lotto.drwtNo5
+        sixthNo.lottoNo = lotto.drwtNo6
+        bnusNo.lottoNo = lotto.bnusNo
     }
 }
