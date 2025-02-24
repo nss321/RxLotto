@@ -5,13 +5,19 @@
 //  Created by BAE on 2/24/25.
 //
 
+import Foundation
+
 import RxSwift
 import RxCocoa
 
 final class LottoViewModel {
+    private let firstLottoDate = Date(timeIntervalSinceReferenceDate: 86400 * 706)
+    private let now = Date.now
+    
     private(set) var numArray: [String] {
         get {
-            let arr: [String] = Array(1...1154).map { String($0) }.reversed()
+            let recent = Int(now.timeIntervalSince(firstLottoDate) / 86400 / 7) + 1
+            let arr: [String] = Array(1...recent).map { String($0) }.reversed()
             return arr
         }
         set {
@@ -28,10 +34,6 @@ final class LottoViewModel {
     }
     
     private let disposeBag = DisposeBag()
-    
-    deinit {
-        print(#function, "VM deinit")
-    }
     
     func transform(input: Input) -> Output {
         let selectedRound = PublishRelay<String>()
@@ -54,6 +56,7 @@ final class LottoViewModel {
 //                    .disposed(by: owner.disposeBag)
 //            })
 //            .disposed(by: disposeBag)
+        
         
         // MARK: Using FlatMap Opertor
         input.pickerSelected

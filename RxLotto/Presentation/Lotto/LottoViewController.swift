@@ -23,12 +23,12 @@ final class LottoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
+//        print(viewModel.firstLottoDate)
+//        print(Int(Date.now.timeIntervalSince(viewModel.firstLottoDate) / 86400 / 7) + 1)
+//        print(Date.now.timeIntervalSince(viewModel.firstLottoDate) / 86400 / 7)
+//        print(Date.now.addingTimeInterval(86400 * 5).timeIntervalSince(Date.now) / 86400 / 7)
     }
     
-    deinit {
-        print(#function, "VC deinit")
-    }
-
     private func bind() {
         let pickerTitles = Observable.just(viewModel.numArray)
         
