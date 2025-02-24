@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		1193B5C62D6C487100326E2E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1193B5C52D6C487100326E2E /* SnapKit */; };
 		1193B5C92D6C488500326E2E /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1193B5C82D6C488500326E2E /* RxCocoa */; };
+		1193B64F2D6C6D4800326E2E /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 1193B64E2D6C6D4100326E2E /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1193B5932D6C45F600326E2E /* RxLotto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxLotto.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1193B64E2D6C6D4100326E2E /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -52,6 +54,7 @@
 		1193B58A2D6C45F500326E2E = {
 			isa = PBXGroup;
 			children = (
+				1193B64E2D6C6D4100326E2E /* .gitignore */,
 				1193B5952D6C45F600326E2E /* RxLotto */,
 				1193B5942D6C45F600326E2E /* Products */,
 			);
@@ -135,6 +138,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1193B64F2D6C6D4800326E2E /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

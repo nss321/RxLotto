@@ -55,7 +55,7 @@ final class LottoView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configLayout()
-        configView()
+        backgroundColor = .systemBackground
     }
     
     required init?(coder: NSCoder) {
@@ -135,7 +135,9 @@ extension LottoView {
 //        
     }
     
-    private func configView() {
-        backgroundColor = .systemBackground
+    func configView(lotto: Lotto) {
+        textField.text = "\(lotto.drwNo)"
+        dateLabel.text = lotto.drwNoDate
+        roundOfLottoLabel.text = "\(lotto.drwNo)회 당첨결과"
     }
 }

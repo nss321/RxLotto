@@ -24,6 +24,10 @@ final class LottoViewController: UIViewController {
         super.viewDidLoad()
         bind()
     }
+    
+    deinit {
+        print(#function, "VC deinit")
+    }
 
     private func bind() {
         let pickerTitles = Observable.just(viewModel.numArray)
@@ -41,6 +45,18 @@ final class LottoViewController: UIViewController {
             )
             .disposed(by: disposeBag)
         
+        output.lottoResult
+            .drive(with: self, onNext: { owner, response in
+                if let response {
+                    owner.lottoView.configView(lotto: response)
+                }
+            },onCompleted: { owner in
+                print(#function, "onCompleted")
+            }, onDisposed: { owner in
+                print(#function, "onDisposed")
+            })
+            .disposed(by: disposeBag)
+        
         pickerTitles
             .bind(to: lottoView.pickerView.rx.itemTitles)  { row, component in
                 return "\(component)"
@@ -52,7 +68,6 @@ final class LottoViewController: UIViewController {
                 owner.lottoView.textField.resignFirstResponder()
             }
             .disposed(by: disposeBag)
-        
     }
 }
 
