@@ -23,17 +23,24 @@ final class LottoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
-//        print(viewModel.firstLottoDate)
-//        print(Int(Date.now.timeIntervalSince(viewModel.firstLottoDate) / 86400 / 7) + 1)
-//        print(Date.now.timeIntervalSince(viewModel.firstLottoDate) / 86400 / 7)
-//        print(Date.now.addingTimeInterval(86400 * 5).timeIntervalSince(Date.now) / 86400 / 7)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NetworkService.shared.callLottoAPI(round: viewModel.numArray.first ?? "")
+            .bind(with: self) { owner, response in
+                owner.lottoView.configView(lotto: response)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func bind() {
         let pickerTitles = Observable.just(viewModel.numArray)
         
         let input = LottoViewModel.Input(
-            pickerSelected: lottoView.pickerView.rx.itemSelected
+            pickerSelected: lottoView.pickerView.rx.itemSelected,
+            observableButtonTap: lottoView.observableButton.rx.tap,
+            singleButtonTap: lottoView.singleButton.rx.tap
         )
         
         let output = viewModel.transform(input: input)
@@ -63,11 +70,11 @@ final class LottoViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        lottoView.pickerView.rx.itemSelected
-            .bind(with: self) { owner, _ in
-                owner.lottoView.textField.resignFirstResponder()
-            }
-            .disposed(by: disposeBag)
+//        lottoView.pickerView.rx.itemSelected
+//            .bind(with: self) { owner, _ in
+//                owner.lottoView.textField.resignFirstResponder()
+//            }
+//            .disposed(by: disposeBag)
     }
 }
 

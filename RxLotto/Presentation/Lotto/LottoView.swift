@@ -111,8 +111,24 @@ final class LottoView: UIView {
         let view = LottoCircle()
         view.circle.backgroundColor = .clear
         view.numLabel.text = "+"
-        view.numLabel.textColor = .black
+        view.numLabel.textColor = .label
         return view
+    }()
+    let observableButton: UIButton = {
+        let button = UIButton()
+        button.configuration = UIButton.Configuration.plain()
+        button.configuration?.title = "Observable"
+        button.configuration?.baseForegroundColor = .label
+        button.configuration?.background.backgroundColor = .secondarySystemBackground
+        return button
+    }()
+    let singleButton: UIButton = {
+        let button = UIButton()
+        button.configuration = UIButton.Configuration.plain()
+        button.configuration?.title = "Single"
+        button.configuration?.baseForegroundColor = .label
+        button.configuration?.background.backgroundColor = .secondarySystemBackground
+        return button
     }()
     
     override init(frame: CGRect) {
@@ -128,7 +144,7 @@ final class LottoView: UIView {
 
 extension LottoView {
     private func configLayout() {
-        [textField, notiLabel, dateLabel, dividerView, roundOfLottoLabel, stackView, bnusLabel].forEach { addSubview($0) }
+        [textField, notiLabel, dateLabel, dividerView, roundOfLottoLabel, stackView, bnusLabel, observableButton, singleButton].forEach { addSubview($0) }
         
         [firstNo, secondNo, thirdNo, fourthNo, fifthNo, sixthNo, plusLabel, bnusNo].forEach { stackView.addArrangedSubview($0)
             $0.snp.makeConstraints {
@@ -162,7 +178,7 @@ extension LottoView {
             $0.top.equalTo(dividerView.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
         }
-    
+        
         stackView.snp.makeConstraints {
             $0.top.equalTo(roundOfLottoLabel.snp.bottom).offset(20)
             $0.leading.equalToSuperview().inset(12)
@@ -173,18 +189,29 @@ extension LottoView {
             $0.top.equalTo(stackView.snp.bottom)
             $0.centerX.equalTo(bnusNo.snp.centerX)
         }
+        
+        observableButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.centerX.equalToSuperview().multipliedBy(0.5)
+        }
+        singleButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.centerX.equalToSuperview().multipliedBy(1.5)
+        }
     }
     
     func configView(lotto: Lotto) {
-        textField.text = "\(lotto.drwNo)"
-        dateLabel.text = lotto.drwNoDate
-        roundOfLottoLabel.text = "\(lotto.drwNo)회 당첨결과"
-        firstNo.lottoNo = lotto.drwtNo1
-        secondNo.lottoNo = lotto.drwtNo2
-        thirdNo.lottoNo = lotto.drwtNo3
-        fourthNo.lottoNo = lotto.drwtNo4
-        fifthNo.lottoNo = lotto.drwtNo5
-        sixthNo.lottoNo = lotto.drwtNo6
-        bnusNo.lottoNo = lotto.bnusNo
+        DispatchQueue.main.async {
+            self.textField.text = "\(lotto.drwNo)"
+            self.dateLabel.text = lotto.drwNoDate
+            self.roundOfLottoLabel.text = "\(lotto.drwNo)회 당첨결과"
+            self.firstNo.lottoNo = lotto.drwtNo1
+            self.secondNo.lottoNo = lotto.drwtNo2
+            self.thirdNo.lottoNo = lotto.drwtNo3
+            self.fourthNo.lottoNo = lotto.drwtNo4
+            self.fifthNo.lottoNo = lotto.drwtNo5
+            self.sixthNo.lottoNo = lotto.drwtNo6
+            self.bnusNo.lottoNo = lotto.bnusNo
+        }
     }
 }

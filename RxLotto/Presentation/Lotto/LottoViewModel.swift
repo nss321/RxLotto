@@ -13,19 +13,15 @@ import RxCocoa
 final class LottoViewModel {
     private let firstLottoDate = Date(timeIntervalSinceReferenceDate: 86400 * 706)
     private let now = Date.now
+    lazy var numArray: [String] = {
+        let recent = Int(now.timeIntervalSince(firstLottoDate) / 86400 / 7) + 1
+        return (1...recent).map { String($0) }.reversed()
+    }()
     
-    private(set) var numArray: [String] {
-        get {
-            let recent = Int(now.timeIntervalSince(firstLottoDate) / 86400 / 7) + 1
-            let arr: [String] = Array(1...recent).map { String($0) }.reversed()
-            return arr
-        }
-        set {
-            newValue
-        }
-    }
     struct Input {
         let pickerSelected: ControlEvent<(row: Int, component: Int)>
+        let observableButtonTap: ControlEvent<Void>
+        let singleButtonTap: ControlEvent<Void>
     }
     
     struct Output {
@@ -34,6 +30,7 @@ final class LottoViewModel {
     }
     
     private let disposeBag = DisposeBag()
+    private var singleToggle = BehaviorRelay(value: false)
     
     func transform(input: Input) -> Output {
         let selectedRound = PublishRelay<String>()
@@ -59,31 +56,75 @@ final class LottoViewModel {
         
         
         // MARK: Using FlatMap Opertor
-        input.pickerSelected
-            .map { row, component in
-                return row
+//        input.pickerSelected
+//            .map { [weak self] row, _ in
+//                if let round = self?.numArray[row] {
+//                    return round
+//                } else {
+//                    return ""
+//                }
+//            }
+//            .flatMap {
+////                NetworkService.shared.callLottoAPI(round: $0)
+////                    .debug("API")
+//                NetworkService.shared.callLottoAPIWithSingle(round: $0)
+//                    .debug("API")
+//            }
+//            .bind(with: self, onNext: { owner, value in
+//                lottoResult.accept(value)
+//                print(value)
+//            })
+//            .disposed(by: disposeBag)
+//
+////            .subscribe(with: self, onNext: { owner, response in
+////                print(#function, "onNext")
+////            }, onError: { owner, error in
+////                print(#function, "onError")
+////            }, onCompleted: { owner in
+////                print(#function, "onCompleted")
+////            }, onDisposed: { owner in
+////                print(#function, "onDisposed")
+////            })
+        
+        
+        input.observableButtonTap
+            .withLatestFrom(input.pickerSelected)
+            .map { [weak self] row, _ in
+                if let round = self?.numArray[row] {
+                    return round
+                } else {
+                    return ""
+                }
             }
-            .map { self.numArray[$0] }
             .flatMap {
                 NetworkService.shared.callLottoAPI(round: $0)
                     .debug("API")
             }
-        
-            .bind(with: self, onNext: { owner, value in
+            .bind(onNext: { value in
                 lottoResult.accept(value)
-                print(value)
             })
             .disposed(by: disposeBag)
-
-//            .subscribe(with: self, onNext: { owner, response in
-//                print(#function, "onNext")
-//            }, onError: { owner, error in
-//                print(#function, "onError")
-//            }, onCompleted: { owner in
-//                print(#function, "onCompleted")
-//            }, onDisposed: { owner in
-//                print(#function, "onDisposed")
-//            })
+        
+        
+        input.singleButtonTap
+            .withLatestFrom(input.pickerSelected)
+            .map { [weak self] row, _ in
+                if let round = self?.numArray[row] {
+                    return round
+                } else {
+                    return ""
+                }
+            }
+            .flatMap {
+                NetworkService.shared.callLottoAPIWithSingle(round: $0)
+                    .debug("API")
+            }
+            .bind(onNext: { value in
+                lottoResult.accept(value)
+            })
+            .disposed(by: disposeBag)
+        
+        
         
         return Output(
             selectedRound: selectedRound.asDriver(onErrorJustReturn: ""),
