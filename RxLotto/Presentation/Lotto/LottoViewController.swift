@@ -28,7 +28,8 @@ final class LottoViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NetworkService.shared.callLottoAPI(round: viewModel.numArray.first ?? "")
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
+//            .subscribe(on: <#T##any ImmediateSchedulerType#>)
             .bind(with: self) { owner, response in
                 owner.lottoView.configView(lotto: response)
             }
@@ -46,7 +47,6 @@ final class LottoViewController: UIViewController {
         
         let output = viewModel.transform(input: input)
         
-        
         output.selectedRound
             .drive(
                 lottoView.textField.rx.text
@@ -54,15 +54,11 @@ final class LottoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output.lottoResult
-            .drive(with: self, onNext: { owner, response in
+            .drive(with: self) { owner, response in
                 if let response {
                     owner.lottoView.configView(lotto: response)
                 }
-            },onCompleted: { owner in
-                print(#function, "onCompleted")
-            }, onDisposed: { owner in
-                print(#function, "onDisposed")
-            })
+            }
             .disposed(by: disposeBag)
         
         pickerTitles
