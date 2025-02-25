@@ -201,17 +201,15 @@ extension LottoView {
     }
     
     func configView(lotto: Lotto) {
-        DispatchQueue.main.async {
-            self.textField.text = "\(lotto.drwNo)"
-            self.dateLabel.text = lotto.drwNoDate
-            self.roundOfLottoLabel.text = "\(lotto.drwNo)회 당첨결과"
-            self.firstNo.lottoNo = lotto.drwtNo1
-            self.secondNo.lottoNo = lotto.drwtNo2
-            self.thirdNo.lottoNo = lotto.drwtNo3
-            self.fourthNo.lottoNo = lotto.drwtNo4
-            self.fifthNo.lottoNo = lotto.drwtNo5
-            self.sixthNo.lottoNo = lotto.drwtNo6
-            self.bnusNo.lottoNo = lotto.bnusNo
-        }
+        self.textField.text = "\(lotto.drwNo)"
+        self.dateLabel.text = lotto.drwNoDate
+        self.roundOfLottoLabel.text = "\(lotto.drwNo)회 당첨결과"
+        self.firstNo.lottoNo = lotto.drwtNo1
+        self.secondNo.lottoNo = lotto.drwtNo2
+        self.thirdNo.lottoNo = lotto.drwtNo3
+        self.fourthNo.lottoNo = lotto.drwtNo4
+        self.fifthNo.lottoNo = lotto.drwtNo5
+        self.sixthNo.lottoNo = lotto.drwtNo6
+        self.bnusNo.lottoNo = lotto.bnusNo
     }
 }

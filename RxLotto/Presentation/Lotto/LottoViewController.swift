@@ -28,6 +28,7 @@ final class LottoViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NetworkService.shared.callLottoAPI(round: viewModel.numArray.first ?? "")
+            .observe(on: MainScheduler.asyncInstance)
             .bind(with: self) { owner, response in
                 owner.lottoView.configView(lotto: response)
             }

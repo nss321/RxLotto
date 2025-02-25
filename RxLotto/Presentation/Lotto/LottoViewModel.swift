@@ -30,7 +30,6 @@ final class LottoViewModel {
     }
     
     private let disposeBag = DisposeBag()
-    private var singleToggle = BehaviorRelay(value: false)
     
     func transform(input: Input) -> Output {
         let selectedRound = PublishRelay<String>()
@@ -87,6 +86,7 @@ final class LottoViewModel {
 ////            })
         
         
+        // MARK: Observable Button Tap
         input.observableButtonTap
             .withLatestFrom(input.pickerSelected)
             .map { [weak self] row, _ in
@@ -105,7 +105,7 @@ final class LottoViewModel {
             })
             .disposed(by: disposeBag)
         
-        
+        // MARK: Single Button Tap
         input.singleButtonTap
             .withLatestFrom(input.pickerSelected)
             .map { [weak self] row, _ in
@@ -125,8 +125,8 @@ final class LottoViewModel {
             .disposed(by: disposeBag)
         
         
-        
         return Output(
+            // TODO: 네트워크 요청에 실패헀을 시 선택한 회차는 보여주고, 요청 실패 표시
             selectedRound: selectedRound.asDriver(onErrorJustReturn: ""),
             lottoResult: lottoResult.asDriver(onErrorJustReturn: nil)
         )
